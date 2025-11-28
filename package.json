@@ -6,7 +6,7 @@
 		"name": "TeaCoder",
 		"url": "https://teacoder.ru"
 	},
-	"license": "UNLICENSED",
+	"license": "MIT",
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",

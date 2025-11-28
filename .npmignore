@@ -1,0 +1,17 @@
+# Do not publish source files
+src/
+test/
+coverage/
+.github/
+.vscode/
+.idea/
+
+# Build config
+tsconfig.json
+tsup.config.ts
+vitest.config.ts
+
+# Local environment / logs
+*.log
+*.local
+*.tmp
