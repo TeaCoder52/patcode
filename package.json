@@ -4,7 +4,7 @@
 	"description": "Human-friendly numeric pattern codes for OTP, SMS, 2FA, etc.",
 	"author": {
 		"name": "TeaCoder",
-		"url": "https://teaocder.ru"
+		"url": "https://teacoder.ru"
 	},
 	"license": "UNLICENSED",
 	"main": "./dist/index.cjs",
@@ -23,7 +23,10 @@
 	],
 	"scripts": {
 		"clean": "rm -rf dist",
-		"build": "tsup"
+		"build": "tsup",
+		"test": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"test:ci": "vitest run"
 	},
 	"keywords": [
 		"otp",
