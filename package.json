@@ -1,0 +1,40 @@
+{
+	"name": "patcode",
+	"version": "1.0.0",
+	"description": "Human-friendly numeric pattern codes for OTP, SMS, 2FA, etc.",
+	"author": {
+		"name": "TeaCoder",
+		"url": "https://teaocder.ru"
+	},
+	"license": "UNLICENSED",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"sideEffects": false,
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"clean": "rm -rf dist",
+		"build": "tsup"
+	},
+	"keywords": [
+		"otp",
+		"code",
+		"pin",
+		"pattern",
+		"sms",
+		"2fa"
+	],
+	"devDependencies": {
+		"tsup": "^8.0.0",
+		"typescript": "^5.6.0"
+	}
+}
