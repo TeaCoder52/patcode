@@ -11,6 +11,10 @@ export enum Strategy {
 	Custom = 'custom',
 }
 
+export type HumanProfile = 'default' | 'children' | 'elderly' | 'asia' | 'latam'
+export type SecurityMode = 'normal' | 'banking'
+export type RngProfile = 'insecure' | 'secure' | 'hybrid' | (string & {})
+
 export interface CustomStrategyContext {
 	length: CodeLength
 	pickDigit(): string
@@ -21,6 +25,24 @@ export interface CustomStrategyContext {
 	isAllSame(code: string): boolean
 }
 
+export interface CodeAnalysis {
+	length: CodeLength
+	isAllSame: boolean
+	isTooSimple: boolean
+	isSequentialAsc: boolean
+	isSequentialDesc: boolean
+	repeatedGroups: number
+
+	entropy: number
+	collisionRisk: 'low' | 'medium' | 'high'
+	memorability: 'low' | 'medium' | 'high'
+}
+
+export interface CodePrediction {
+	memorabilityScore: number
+	confusionScore: number
+}
+
 export interface GenerateOptions {
 	length?: CodeLength
 	strategy?: Strategy
@@ -29,19 +51,14 @@ export interface GenerateOptions {
 	blackList?: string[]
 	previousCode?: string
 	allowedDigits?: string[]
-	rng?: () => number
-	customStrategy?: (ctx: CustomStrategyContext) => string
-}
 
-export interface CodeAnalysis {
-	length: CodeLength
-	isAllSame: boolean
-	isTooSimple: boolean
-	isSequentialAsc: boolean
-	isSequentialDesc: boolean
-	repeatedGroups: number
-	pattern?: string
-	entropy: number
-	memorability: 'low' | 'medium' | 'high'
-	collisionRisk: 'low' | 'medium' | 'high'
+	rng?: () => number
+	rngProfile?: RngProfile
+
+	profile?: HumanProfile
+	mode?: SecurityMode
+
+	avoidSimilarPrevious?: boolean
+
+	customStrategy?: (ctx: CustomStrategyContext) => string
 }

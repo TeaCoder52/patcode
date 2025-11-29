@@ -37,10 +37,11 @@
 		"2fa"
 	],
 	"devDependencies": {
+		"@types/node": "^24.10.1",
+		"@vitest/coverage-v8": "^4.0.14",
+		"ts-node": "^10.9.2",
 		"tsup": "^8.0.0",
 		"typescript": "^5.6.0",
-		"vitest": "^4.0.14",
-		"@vitest/coverage-v8": "^4.0.14",
-		"ts-node": "^10.9.2"
+		"vitest": "^4.0.14"
 	}
 }

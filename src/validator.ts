@@ -1,5 +1,10 @@
 import type { GenerateOptions } from './types'
 import { isAllSame, isTooSimpleSequence } from './utils'
+import {
+	isModeCompatible,
+	isPredictionCompatible,
+	isProfileCompatible,
+} from './profile'
 
 export function isCodeAllowed(
 	code: string,
@@ -13,6 +18,10 @@ export function isCodeAllowed(
 
 	if (avoidAllSame && isAllSame(code)) return false
 	if (avoidSimple && isTooSimpleSequence(code)) return false
+
+	if (!isProfileCompatible(code, options)) return false
+	if (!isModeCompatible(code, options)) return false
+	if (!isPredictionCompatible(code, options)) return false
 
 	return true
 }

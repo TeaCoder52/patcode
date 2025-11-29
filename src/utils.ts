@@ -1,7 +1,8 @@
 import type { GenerateOptions } from './types'
+import { resolveRng } from './rng'
 
 export function getRng(options?: GenerateOptions): () => number {
-	return options?.rng ?? Math.random
+	return resolveRng(options)
 }
 
 export function getAllowedDigits(options?: GenerateOptions): string[] {
@@ -12,18 +13,16 @@ export function getAllowedDigits(options?: GenerateOptions): string[] {
 }
 
 export function pickRandom<T>(array: T[], rng: () => number): T {
-	if (!array.length) {
-		throw new Error('Cannot pick from empty array')
-	}
+	if (!array.length) throw new Error('Cannot pick from empty array')
 	const index = Math.floor(rng() * array.length)
-	return array[index]
+	return array[index]!
 }
 
 export function shuffle<T>(array: T[], rng: () => number): T[] {
 	const arr = array.slice()
 	for (let i = arr.length - 1; i > 0; i--) {
 		const j = Math.floor(rng() * (i + 1))
-		;[arr[i], arr[j]] = [arr[j], arr[i]]
+		;[arr[i], arr[j]] = [arr[j]!, arr[i]!]
 	}
 	return arr
 }
@@ -36,70 +35,69 @@ export function pickTwoDifferentDigits(
 	digits: string[],
 	rng: () => number
 ): [string, string] {
-	if (digits.length < 2) {
-		throw new Error('Need at least 2 digits')
-	}
+	if (digits.length < 2) throw new Error('Need at least 2 different digits')
 
-	const A = pickDigit(digits, rng)
-	let B = pickDigit(digits, rng)
+	const d1 = pickDigit(digits, rng)
+	let d2 = pickDigit(digits, rng)
 	let guard = 0
 
-	while (B === A && guard++ < 20) {
-		B = pickDigit(digits, rng)
+	while (d2 === d1 && guard++ < 20) {
+		d2 = pickDigit(digits, rng)
 	}
 
-	if (A === B) {
-		const filtered = digits.filter((d) => d !== A)
-		B = pickDigit(filtered, rng)
+	if (d1 === d2) {
+		const filtered = digits.filter((d) => d !== d1)
+		d2 = pickDigit(filtered, rng)
 	}
 
-	return [A, B]
+	return [d1, d2]
 }
 
 export function pickThreeDifferentDigits(
 	digits: string[],
 	rng: () => number
 ): [string, string, string] {
-	const [A, B] = pickTwoDifferentDigits(digits, rng)
-	let C = pickDigit(digits, rng)
+	if (digits.length < 3) throw new Error('Need at least 3 different digits')
+
+	const [d1, d2] = pickTwoDifferentDigits(digits, rng)
+	let d3 = pickDigit(digits, rng)
 	let guard = 0
 
-	while ((C === A || C === B) && guard++ < 30) {
-		C = pickDigit(digits, rng)
+	while ((d3 === d1 || d3 === d2) && guard++ < 30) {
+		d3 = pickDigit(digits, rng)
 	}
 
-	if (C === A || C === B) {
-		const filtered = digits.filter((d) => d !== A && d !== B)
-		C = pickDigit(filtered, rng)
+	if (d3 === d1 || d3 === d2) {
+		const filtered = digits.filter((d) => d !== d1 && d !== d2)
+		d3 = pickDigit(filtered, rng)
 	}
 
-	return [A, B, C]
+	return [d1, d2, d3]
 }
 
 export function isAllSame(code: string): boolean {
 	if (!code) return false
-	return [...code].every((ch) => ch === code[0])
+	const first = code[0]
+	for (let i = 1; i < code.length; i++) {
+		if (code[i] !== first) return false
+	}
+	return true
 }
 
 export function isTooSimpleSequence(code: string): boolean {
 	if (!code || code.length < 3) return false
 
-	let isAscending = true
-	let isDescending = true
+	let asc = true
+	let desc = true
 
 	for (let i = 1; i < code.length; i++) {
 		const prev = Number(code[i - 1])
 		const curr = Number(code[i])
-
-		if (curr !== (prev + 1) % 10) {
-			isAscending = false
-		}
-		if (curr !== (prev + 9) % 10) {
-			isDescending = false
-		}
+		if (curr !== (prev + 1) % 10) asc = false
+		if (curr !== (prev + 9) % 10) desc = false
 	}
 
-	return isAscending || isDescending
+	return asc || desc
 }
 
 export function fromDigits(digits: string[]): string {

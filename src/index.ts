@@ -3,34 +3,47 @@ import {
 	CodeLength,
 	Strategy,
 	CustomStrategyContext,
-	CodeAnalysis,
+	HumanProfile,
+	SecurityMode,
+	RngProfile,
+	type CodeAnalysis,
+	type CodePrediction,
 } from './types'
 import { getStrategyImpl } from './strategy'
 import { isCodeAllowed } from './validator'
 import {
 	getAllowedDigits,
-	getRng,
 	fromDigits,
 	isAllSame,
 	isTooSimpleSequence,
 	pickDigit,
 	pickTwoDifferentDigits,
 	pickThreeDifferentDigits,
+	getRng,
 } from './utils'
+import { registerRng } from './rng'
+import { analyze } from './analyze'
+import { predictCodeQuality } from './predictor'
 
-export { analyze } from './analyze'
-
-export {
+export type {
 	GenerateOptions,
 	CodeLength,
-	Strategy,
 	CustomStrategyContext,
+	HumanProfile,
+	SecurityMode,
+	RngProfile,
 	CodeAnalysis,
+	CodePrediction,
 }
+export { Strategy, analyze, predictCodeQuality, registerRng }
 
 export function generateCode(options: GenerateOptions = {}): string {
 	const length: CodeLength = options.length === 4 ? 4 : 6
 	const strategy: Strategy = options.strategy ?? Strategy.Mixed
+
+	if (options.mode === 'banking') {
+		return generateBankingCode({ ...options, length })
+	}
 
 	const impl = getStrategyImpl(length, strategy, options)
 
@@ -48,6 +61,32 @@ export function generateCode(options: GenerateOptions = {}): string {
 	}
 
 	return code.slice(0, length)
+}
+
+function generateBankingCode(options: GenerateOptions = {}): string {
+	const length: CodeLength = options.length === 4 ? 4 : 6
+	const digits = getAllowedDigits(options)
+	const rng = getRng({ ...options, mode: 'banking' })
+
+	const maxAttempts = 100
+	for (let i = 0; i < maxAttempts; i++) {
+		const result: string[] = []
+		while (result.length < length) {
+			const d = pickDigit(digits, rng)
+			if (!result.includes(d)) {
+				result.push(d)
+			}
+		}
+		const code = fromDigits(result)
+		if (isCodeAllowed(code, { ...options, mode: 'banking' })) {
+			return code
+		}
+	}
+
+	const fallback = fromDigits(
+		Array.from({ length }, () => pickDigit(digits, rng))
+	)
+	return fallback.slice(0, length)
 }
 
 export function isHumanFriendly(
