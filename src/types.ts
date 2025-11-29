@@ -1,14 +1,15 @@
 export type CodeLength = 4 | 6
 
-export type StrategyName =
-	| 'mixed'
-	| 'pairs'
-	| 'triples'
-	| 'mirror'
-	| 'wave'
-	| 'escalator'
-	| 'pairWave'
-	| 'custom'
+export enum Strategy {
+	Mixed = 'mixed',
+	Pairs = 'pairs',
+	Triples = 'triples',
+	Mirror = 'mirror',
+	Wave = 'wave',
+	Escalator = 'escalator',
+	PairWave = 'pairWave',
+	Custom = 'custom',
+}
 
 export interface CustomStrategyContext {
 	length: CodeLength
@@ -22,7 +23,7 @@ export interface CustomStrategyContext {
 
 export interface GenerateOptions {
 	length?: CodeLength
-	strategy?: StrategyName
+	strategy?: Strategy
 	avoidSimpleSequences?: boolean
 	avoidSameDigits?: boolean
 	blackList?: string[]
@@ -30,4 +31,17 @@ export interface GenerateOptions {
 	allowedDigits?: string[]
 	rng?: () => number
 	customStrategy?: (ctx: CustomStrategyContext) => string
+}
+
+export interface CodeAnalysis {
+	length: CodeLength
+	isAllSame: boolean
+	isTooSimple: boolean
+	isSequentialAsc: boolean
+	isSequentialDesc: boolean
+	repeatedGroups: number
+	pattern?: string
+	entropy: number
+	memorability: 'low' | 'medium' | 'high'
+	collisionRisk: 'low' | 'medium' | 'high'
 }

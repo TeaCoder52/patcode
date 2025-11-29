@@ -1,6 +1,6 @@
 import type {
 	CodeLength,
-	StrategyName,
+	Strategy,
 	GenerateOptions,
 	CustomStrategyContext,
 } from './types'
@@ -10,7 +10,7 @@ import * as s6 from './patterns6'
 
 export function getStrategyImpl(
 	length: CodeLength,
-	strategy: StrategyName,
+	strategy: Strategy,
 	options: GenerateOptions
 ): () => string {
 	const digits = utils.getAllowedDigits(options)

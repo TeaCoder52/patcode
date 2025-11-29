@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateCode } from '../src/index'
+import { generateCode, Strategy } from '../src/index'
 
 function fakeRngGenerator(values: number[]) {
 	let i = 0
@@ -12,7 +12,7 @@ describe('deterministic RNG', () => {
 
 		const code1 = generateCode({
 			length: 6,
-			strategy: 'custom',
+			strategy: Strategy.Custom,
 			rng,
 			customStrategy(ctx) {
 				const d1 = ctx.pickDigit()
@@ -30,7 +30,7 @@ describe('deterministic RNG', () => {
 
 		const code2 = generateCode({
 			length: 6,
-			strategy: 'custom',
+			strategy: Strategy.Custom,
 			rng: rng2,
 			customStrategy(ctx) {
 				const d1 = ctx.pickDigit()

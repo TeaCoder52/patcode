@@ -1,8 +1,9 @@
-import type {
+import {
 	GenerateOptions,
 	CodeLength,
-	StrategyName,
+	Strategy,
 	CustomStrategyContext,
+	CodeAnalysis,
 } from './types'
 import { getStrategyImpl } from './strategy'
 import { isCodeAllowed } from './validator'
@@ -17,11 +18,19 @@ import {
 	pickThreeDifferentDigits,
 } from './utils'
 
-export type { GenerateOptions, CodeLength, StrategyName, CustomStrategyContext }
+export { analyze } from './analyze'
+
+export {
+	GenerateOptions,
+	CodeLength,
+	Strategy,
+	CustomStrategyContext,
+	CodeAnalysis,
+}
 
 export function generateCode(options: GenerateOptions = {}): string {
 	const length: CodeLength = options.length === 4 ? 4 : 6
-	const strategy: StrategyName = options.strategy ?? 'mixed'
+	const strategy: Strategy = options.strategy ?? Strategy.Mixed
 
 	const impl = getStrategyImpl(length, strategy, options)
 
