@@ -1,6 +1,6 @@
 {
 	"name": "patcode",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Human-friendly numeric pattern codes for OTP, SMS, 2FA, etc.",
 	"author": {
 		"name": "TeaCoder",
